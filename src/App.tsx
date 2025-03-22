@@ -1,4 +1,3 @@
-import React from 'react'
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { useGame } from './hooks/useGame'
 import { GameCanvas } from './components/GameCanvas'

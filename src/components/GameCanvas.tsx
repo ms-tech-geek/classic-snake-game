@@ -1,4 +1,3 @@
-import React from 'react'
 import { forwardRef, MouseEvent } from 'react'
 
 interface GameCanvasProps {
