@@ -10,15 +10,15 @@ function App() {
     <div className="h-full bg-gray-900 flex flex-col overflow-hidden">
       {/* Header Section */}
       <header className="bg-gray-800/50 backdrop-blur-sm py-2 px-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+        <div className="container mx-auto flex items-center justify-between">
           <h1 className="text-2xl font-bold text-white">Snake Game</h1>
           <p className="text-xl text-indigo-400 font-semibold">Score: {gameState.score}</p>
         </div>
       </header>
 
       {/* Game Area */}
-      <main className="flex-1 flex items-center justify-center">
-        <div className="aspect-square h-[calc(100vh-4rem)] max-h-[calc(100vw-2rem)] bg-gray-800 relative"
+      <main className="flex-1 flex items-center justify-center p-2">
+        <div className="aspect-square w-full h-[calc(100vh-4rem)] bg-gray-800 relative"
           style={{
             padding: 'min(1vh, 1vw)',
           }}>
@@ -99,8 +99,8 @@ function App() {
       )}
 
       {/* Controls */}
-      {gameState.hasStarted && !gameState.isGameOver && (
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2">
+      {gameState.hasStarted && !gameState.isGameOver && window.matchMedia('(max-width: 768px)').matches && (
+        <div className="fixed bottom-4 left-1/2 -translate-x-1/2">
           <Controls onDirectionChange={changeDirection} />
         </div>
       )}
