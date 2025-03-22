@@ -32,24 +32,35 @@ function App() {
             }}
           >
             {gameState.snake.map((segment, index) => (
+              // Snake segments with head and body styling
               <div
                 key={`${segment.x}-${segment.y}`}
-                className="bg-indigo-500 rounded-sm"
+                className={`
+                  ${index === 0 
+                    ? 'bg-indigo-400 rounded-lg shadow-glow' 
+                    : 'bg-indigo-500 rounded-md'
+                  }
+                  transition-all duration-200
+                  ${gameState.justAte && index === 0 ? 'scale-125' : 'scale-100'}
+                `}
                 style={{
                   gridColumn: segment.x + 1,
                   gridRow: segment.y + 1,
                   width: '100%',
                   height: '100%',
+                  transform: `scale(${0.85 + (gameState.snake.length - index) * 0.01})`,
                 }}
               />
             ))}
+            {/* Food with pulsing animation */}
             <div
-              className="bg-red-500 rounded-full"
+              className="bg-red-500 rounded-full animate-pulse shadow-glow-food"
               style={{
                 gridColumn: gameState.food.x + 1,
                 gridRow: gameState.food.y + 1,
                 width: '100%',
                 height: '100%',
+                animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
               }}
             />
           </div>

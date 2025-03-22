@@ -12,6 +12,7 @@ const createInitialState = (): GameState => ({
   isGameOver: false,
   score: 0,
   hasStarted: false,
+  justAte: false,
 });
 
 const generateFood = (snake: Position[]): Position => {
@@ -81,9 +82,17 @@ export const useGameLoop = () => {
         ...prevState,
         snake: newSnake,
         food: ateFood ? generateFood(newSnake) : prevState.food,
+        justAte: ateFood,
         score: ateFood ? prevState.score + 1 : prevState.score,
       };
     });
+    
+    // Reset the justAte flag after a short delay
+    if (gameState.justAte) {
+      setTimeout(() => {
+        setGameState(prev => ({ ...prev, justAte: false }));
+      }, 200);
+    }
   }, []);
 
   const changeDirection = useCallback((newDirection: Direction) => {

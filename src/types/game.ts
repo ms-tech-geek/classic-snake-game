@@ -12,4 +12,5 @@ export type GameState = {
   isGameOver: boolean;
   score: number;
   hasStarted: boolean;
+  justAte: boolean;
 };
