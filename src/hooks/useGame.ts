@@ -15,15 +15,17 @@ export function useGame(context: CanvasRenderingContext2D | null, dimensions: Di
     gameover: true,
     gameovertime: 1,
     initialized: false,
-    preloaded: false
+    preloaded: false,
+    touchStartX: 0,
+    touchStartY: 0
   })
 
   const snakeRef = useRef(new Snake())
   const levelRef = useRef(new Level(
-    Math.floor(dimensions.width / 32),
-    Math.floor(dimensions.height / 32),
-    32,
-    32
+    20, // Fixed number of tiles for consistent gameplay
+    20,
+    Math.floor(Math.min(dimensions.width, dimensions.height, 600) / 20),
+    Math.floor(Math.min(dimensions.width, dimensions.height, 600) / 20)
   ))
   const imageRef = useRef<HTMLImageElement>()
   
@@ -64,7 +66,7 @@ export function useGame(context: CanvasRenderingContext2D | null, dimensions: Di
     const snake = snakeRef.current
     const level = levelRef.current
     
-    snake.init(10, 10, 1, 10, 4)
+    snake.init(5, 5, 1, 8, 4) // Adjusted starting position and speed
     level.generate()
     addApple()
     
@@ -164,6 +166,55 @@ export function useGame(context: CanvasRenderingContext2D | null, dimensions: Di
       if (snake.direction !== 0) snake.direction = 2
     }
   }, [gameState.gameover, gameState.gameovertime, newGame])
+
+  const handleTouchStart = useCallback((e: TouchEvent) => {
+    if (gameState.gameover) {
+      if (gameState.gameovertime > 0.5) {
+        newGame()
+      }
+      return
+    }
+    setGameState(prev => ({
+      ...prev,
+      touchStartX: e.touches[0].clientX,
+      touchStartY: e.touches[0].clientY
+    }))
+  }, [gameState.gameover, gameState.gameovertime, newGame])
+
+  const handleTouchEnd = useCallback((e: TouchEvent) => {
+    if (gameState.gameover) return
+
+    const touchEndX = e.changedTouches[0].clientX
+    const touchEndY = e.changedTouches[0].clientY
+    const deltaX = touchEndX - gameState.touchStartX
+    const deltaY = touchEndY - gameState.touchStartY
+    const snake = snakeRef.current
+
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+      // Horizontal swipe
+      if (deltaX > 0 && snake.direction !== 3) {
+        snake.direction = 1 // Right
+      } else if (deltaX < 0 && snake.direction !== 1) {
+        snake.direction = 3 // Left
+      }
+    } else {
+      // Vertical swipe
+      if (deltaY > 0 && snake.direction !== 0) {
+        snake.direction = 2 // Down
+      } else if (deltaY < 0 && snake.direction !== 2) {
+        snake.direction = 0 // Up
+      }
+    }
+  }, [gameState.touchStartX, gameState.touchStartY, gameState.gameover])
+
+  useEffect(() => {
+    window.addEventListener('touchstart', handleTouchStart)
+    window.addEventListener('touchend', handleTouchEnd)
+    return () => {
+      window.removeEventListener('touchstart', handleTouchStart)
+      window.removeEventListener('touchend', handleTouchEnd)
+    }
+  }, [handleTouchStart, handleTouchEnd])
 
   const handleMouseDown = useCallback(() => {
     if (gameState.gameover) {

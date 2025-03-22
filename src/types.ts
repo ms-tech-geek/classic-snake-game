@@ -4,4 +4,6 @@ export interface GameState {
   gameovertime: number
   initialized: boolean
   preloaded: boolean
+  touchStartX: number
+  touchStartY: number
 }

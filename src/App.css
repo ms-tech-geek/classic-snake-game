@@ -3,19 +3,21 @@
 
 .game-container {
   position: relative;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  min-height: 100vh;
+  padding: 20px;
   overflow: hidden;
   background: var(--slate-1);
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center
 }
 
 canvas {
   display: block;
-  width: 95%;
-  height: 95%;
+  width: min(95vw, 95vh, 600px);
+  height: min(95vw, 95vh, 600px);
+  aspect-ratio: 1;
   border-radius: 24px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   background: var(--slate-2);
@@ -26,7 +28,7 @@ canvas {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(0.8);
   color: var(--slate-12);
   font-size: 32px;
   text-align: center;
@@ -37,6 +39,7 @@ canvas {
   border: 2px solid var(--slate-6);
   backdrop-filter: blur(8px);
   animation: fadeIn 0.3s ease-out;
+  max-width: 90vw;
 }
 
 .score {
@@ -51,15 +54,16 @@ canvas {
   border-radius: 12px;
   border: 2px solid var(--slate-6);
   backdrop-filter: blur(8px);
+  font-size: clamp(16px, 5vw, 24px);
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translate(-50%, -48%);
+    transform: translate(-50%, -48%) scale(0.8);
   }
   to {
     opacity: 1;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) scale(0.8);
 }
 }
