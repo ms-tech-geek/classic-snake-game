@@ -43,10 +43,10 @@ function App() {
       />
       {gameState.gameover && (
         <div className="game-over">
-          <p>Press any key to start!</p>
+          <p>Press Any Key to Start</p>
         </div>
       )}
-      <div className="score">Score: {gameState.score}</div>
+      <div className="score">SCORE: {gameState.score}</div>
     </div>
   )
 }

@@ -16,7 +16,7 @@ export function drawGame(
   const { width, height } = context.canvas
 
   // Draw background
-  context.fillStyle = "#577ddb"
+  context.fillStyle = "#f1f5f9"
   context.fillRect(0, 0, width, height)
 
   // Draw level
@@ -27,13 +27,13 @@ export function drawGame(
       const tiley = j * level.tileheight
 
       if (tile === 0) {
-        context.fillStyle = "#f7e697"
+        context.fillStyle = "#e2e8f0"
         context.fillRect(tilex, tiley, level.tilewidth, level.tileheight)
       } else if (tile === 1) {
-        context.fillStyle = "#bcae76"
+        context.fillStyle = "#94a3b8"
         context.fillRect(tilex, tiley, level.tilewidth, level.tileheight)
       } else if (tile === 2) {
-        context.fillStyle = "#f7e697"
+        context.fillStyle = "#e2e8f0"
         context.fillRect(tilex, tiley, level.tilewidth, level.tileheight)
         
         const tx = 0
