@@ -110,11 +110,7 @@ function App() {
       )}
 
       {/* Controls */}
-      {gameState.hasStarted && !gameState.isGameOver && window.matchMedia('(max-width: 768px)').matches && (
-        <div className="fixed bottom-4 left-1/2 -translate-x-1/2">
-          <Controls onDirectionChange={changeDirection} />
-        </div>
-      )}
+      {/* Removed on-screen controls in favor of swipe gestures */}
     </div>
   );
 }

@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { Direction, GameState, Position } from '../types/game';
 
+const SWIPE_THRESHOLD = 30; // Minimum distance for a swipe to register
+
 const GRID_SIZE = 20;
 const INITIAL_SPEED = 150;
 const SPEED_INCREMENT = 5;
@@ -120,6 +122,38 @@ export const useGameLoop = () => {
     setGameState(initialState);
   }, []);
 
+  // Touch handling
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+
+  const handleTouchStart = useCallback((e: TouchEvent) => {
+    const touch = e.touches[0];
+    touchStartRef.current = {
+      x: touch.clientX,
+      y: touch.clientY,
+    };
+  }, []);
+
+  const handleTouchEnd = useCallback((e: TouchEvent) => {
+    if (!touchStartRef.current) return;
+
+    const touch = e.changedTouches[0];
+    const deltaX = touch.clientX - touchStartRef.current.x;
+    const deltaY = touch.clientY - touchStartRef.current.y;
+
+    // Only trigger direction change if the swipe distance exceeds the threshold
+    if (Math.abs(deltaX) > SWIPE_THRESHOLD || Math.abs(deltaY) > SWIPE_THRESHOLD) {
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        // Horizontal swipe
+        changeDirection(deltaX > 0 ? 'RIGHT' : 'LEFT');
+      } else {
+        // Vertical swipe
+        changeDirection(deltaY > 0 ? 'DOWN' : 'UP');
+      }
+    }
+
+    touchStartRef.current = null;
+  }, [changeDirection]);
+
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
       switch (e.key) {
@@ -146,8 +180,16 @@ export const useGameLoop = () => {
     };
 
     isFirstRender.current = false;
+    
     window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
+    window.addEventListener('touchstart', handleTouchStart);
+    window.addEventListener('touchend', handleTouchEnd);
+    
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchend', handleTouchEnd);
+    };
   }, [changeDirection, gameState.isGameOver, startGame]);
 
   useEffect(() => {
