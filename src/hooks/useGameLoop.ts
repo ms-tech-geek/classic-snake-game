@@ -136,6 +136,13 @@ export const useGameLoop = () => {
   const handleTouchEnd = useCallback((e: TouchEvent) => {
     if (!touchStartRef.current) return;
 
+    // Handle tap to restart on mobile
+    if (gameState.isGameOver || !gameState.hasStarted) {
+      startGame();
+      touchStartRef.current = null;
+      return;
+    }
+
     const touch = e.changedTouches[0];
     const deltaX = touch.clientX - touchStartRef.current.x;
     const deltaY = touch.clientY - touchStartRef.current.y;
@@ -152,7 +159,7 @@ export const useGameLoop = () => {
     }
 
     touchStartRef.current = null;
-  }, [changeDirection]);
+  }, [changeDirection, gameState.isGameOver, gameState.hasStarted, startGame]);
 
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
