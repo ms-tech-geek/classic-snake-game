@@ -7,52 +7,54 @@ function App() {
   const { gameState, startGame, changeDirection, GRID_SIZE } = useGameLoop();
 
   return (
-    <div className="h-full bg-gray-900 flex items-center justify-center relative overflow-hidden">
-      <div className="absolute top-4 left-0 right-0 text-center z-10">
-        <h1 className="text-4xl font-bold text-white mb-2">Snake Game</h1>
-        <p className="text-xl text-indigo-400">Score: {gameState.score}</p>
-      </div>
+    <div className="h-full bg-gray-900 flex flex-col overflow-hidden">
+      {/* Header Section */}
+      <header className="bg-gray-800/50 backdrop-blur-sm py-2 px-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <h1 className="text-2xl font-bold text-white">Snake Game</h1>
+          <p className="text-xl text-indigo-400 font-semibold">Score: {gameState.score}</p>
+        </div>
+      </header>
 
-      <div
-        className="bg-gray-800 rounded-lg shadow-xl relative"
-        style={{
-          width: 'min(95vh, 95vw)',
-          height: 'min(95vh, 95vw)',
-          padding: 'min(1vh, 1vw)',
-        }}
-      >
-        <div
-          className="relative w-full h-full"
+      {/* Game Area */}
+      <main className="flex-1 flex items-center justify-center">
+        <div className="aspect-square h-[calc(100vh-4rem)] max-h-[calc(100vw-2rem)] bg-gray-800 relative"
           style={{
-            display: 'grid',
-            gridTemplate: `repeat(${GRID_SIZE}, 1fr) / repeat(${GRID_SIZE}, 1fr)`,
-            gap: '1px',
-            background: '#1f2937',
-          }}
-        >
-          {gameState.snake.map((segment, index) => (
+            padding: 'min(1vh, 1vw)',
+          }}>
+          <div
+            className="w-full h-full"
+            style={{
+              display: 'grid',
+              gridTemplate: `repeat(${GRID_SIZE}, 1fr) / repeat(${GRID_SIZE}, 1fr)`,
+              gap: '1px',
+              background: '#1f2937',
+            }}
+          >
+            {gameState.snake.map((segment, index) => (
+              <div
+                key={`${segment.x}-${segment.y}`}
+                className="bg-indigo-500 rounded-sm"
+                style={{
+                  gridColumn: segment.x + 1,
+                  gridRow: segment.y + 1,
+                  width: '100%',
+                  height: '100%',
+                }}
+              />
+            ))}
             <div
-              key={`${segment.x}-${segment.y}`}
-              className="bg-indigo-500 rounded-sm"
+              className="bg-red-500 rounded-full"
               style={{
-                gridColumn: segment.x + 1,
-                gridRow: segment.y + 1,
+                gridColumn: gameState.food.x + 1,
+                gridRow: gameState.food.y + 1,
                 width: '100%',
                 height: '100%',
               }}
             />
-          ))}
-          <div
-            className="bg-red-500 rounded-full"
-            style={{
-              gridColumn: gameState.food.x + 1,
-              gridRow: gameState.food.y + 1,
-              width: '100%',
-              height: '100%',
-            }}
-          />
+          </div>
         </div>
-      </div>
+      </main>
 
       {/* Welcome Screen */}
       {!gameState.hasStarted && (
@@ -98,7 +100,7 @@ function App() {
 
       {/* Controls */}
       {gameState.hasStarted && !gameState.isGameOver && (
-        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-10">
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2">
           <Controls onDirectionChange={changeDirection} />
         </div>
       )}
