@@ -22,10 +22,10 @@ export function useGame(context: CanvasRenderingContext2D | null, dimensions: Di
 
   const snakeRef = useRef(new Snake())
   const levelRef = useRef(new Level(
-    20, // Fixed number of tiles for consistent gameplay
-    20,
-    Math.floor(Math.min(dimensions.width, dimensions.height, 600) / 20),
-    Math.floor(Math.min(dimensions.width, dimensions.height, 600) / 20)
+    25, // More grid cells for smaller snake
+    25,
+    Math.floor(Math.min(dimensions.width, dimensions.height) / 25),
+    Math.floor(Math.min(dimensions.width, dimensions.height) / 25)
   ))
   const imageRef = useRef<HTMLImageElement>()
   
@@ -66,7 +66,7 @@ export function useGame(context: CanvasRenderingContext2D | null, dimensions: Di
     const snake = snakeRef.current
     const level = levelRef.current
     
-    snake.init(5, 5, 1, 8, 4) // Adjusted starting position and speed
+    snake.init(12, 12, 1, 7, 3) // Centered in 25x25 grid, slightly faster for better gameplay
     level.generate()
     addApple()
     
