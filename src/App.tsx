@@ -1,13 +1,21 @@
 import React from 'react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import { useGame } from './hooks/useGame'
 import { GameCanvas } from './components/GameCanvas'
 import './App.css'
 
 function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight })
   const [context, setContext] = useState<CanvasRenderingContext2D | null>(null)
-  const { gameState, handleKeyDown, handleMouseDown } = useGame(context)
+  const { gameState, handleKeyDown, handleMouseDown } = useGame(context, dimensions)
+
+  const handleResize = useCallback(() => {
+    setDimensions({
+      width: window.innerWidth,
+      height: window.innerHeight
+    })
+  }, [])
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -21,12 +29,17 @@ function App() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [handleKeyDown])
 
+  useEffect(() => {
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [handleResize])
+
   return (
     <div className="game-container">
       <GameCanvas 
         ref={canvasRef}
-        width={640}
-        height={480}
+        width={dimensions.width}
+        height={dimensions.height}
         onMouseDown={handleMouseDown}
       />
       {gameState.gameover && (

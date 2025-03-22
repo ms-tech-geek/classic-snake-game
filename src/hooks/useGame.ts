@@ -4,7 +4,12 @@ import { Level } from '../game/Level'
 import { GameState } from '../types'
 import { drawGame } from '../game/renderer'
 
-export function useGame(context: CanvasRenderingContext2D | null) {
+interface Dimensions {
+  width: number
+  height: number
+}
+
+export function useGame(context: CanvasRenderingContext2D | null, dimensions: Dimensions) {
   const [gameState, setGameState] = useState<GameState>({
     score: 0,
     gameover: true,
@@ -14,7 +19,12 @@ export function useGame(context: CanvasRenderingContext2D | null) {
   })
 
   const snakeRef = useRef(new Snake())
-  const levelRef = useRef(new Level(20, 15, 32, 32))
+  const levelRef = useRef(new Level(
+    Math.floor(dimensions.width / 32),
+    Math.floor(dimensions.height / 32),
+    32,
+    32
+  ))
   const imageRef = useRef<HTMLImageElement>()
   
   useEffect(() => {
@@ -132,7 +142,7 @@ export function useGame(context: CanvasRenderingContext2D | null) {
 
     animationFrameId = requestAnimationFrame(render)
     return () => cancelAnimationFrame(animationFrameId)
-  }, [context, gameState, updateGame])
+  }, [context, gameState, updateGame, dimensions])
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     const snake = snakeRef.current
