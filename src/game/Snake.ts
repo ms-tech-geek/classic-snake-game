@@ -38,7 +38,11 @@ export class Snake {
   tryMove(dt: number) {
     this.movedelay += dt
     const maxmovedelay = 1 / this.speed
-    return this.movedelay > maxmovedelay
+    if (this.movedelay > maxmovedelay) {
+      this.movedelay = 0
+      return true
+    }
+    return false
   }
 
   nextMove() {

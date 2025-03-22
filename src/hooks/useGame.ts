@@ -70,7 +70,7 @@ export function useGame(context: CanvasRenderingContext2D | null, dimensions: Di
       Math.floor(level.columns / 2),
       Math.floor(level.rows / 2),
       1,
-      7,
+      5,
       3
     )
     level.generate()
@@ -190,20 +190,26 @@ export function useGame(context: CanvasRenderingContext2D | null, dimensions: Di
   const handleTouchEnd = useCallback((e: TouchEvent) => {
     if (gameState.gameover) return
 
+    e.preventDefault()
     const touchEndX = e.changedTouches[0].clientX
     const touchEndY = e.changedTouches[0].clientY
     const deltaX = touchEndX - gameState.touchStartX
     const deltaY = touchEndY - gameState.touchStartY
     const snake = snakeRef.current
+    const minSwipeDistance = 10
 
-    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+    if (Math.abs(deltaX) < minSwipeDistance && Math.abs(deltaY) < minSwipeDistance) {
+      return
+    }
+
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > minSwipeDistance) {
       // Horizontal swipe
       if (deltaX > 0 && snake.direction !== 3) {
         snake.direction = 1 // Right
       } else if (deltaX < 0 && snake.direction !== 1) {
         snake.direction = 3 // Left
       }
-    } else {
+    } else if (Math.abs(deltaY) > minSwipeDistance) {
       // Vertical swipe
       if (deltaY > 0 && snake.direction !== 0) {
         snake.direction = 2 // Down
